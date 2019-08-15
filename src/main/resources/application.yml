@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: limits-service
+
+server:
+  port: 8080
+  servlet.context-path: /limits-service
+
+limits-service:
+  maximum: 2000
+  minimum: 1
