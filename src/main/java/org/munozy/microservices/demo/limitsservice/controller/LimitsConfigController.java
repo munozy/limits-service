@@ -1,5 +1,6 @@
 package org.munozy.microservices.demo.limitsservice.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.munozy.microservices.demo.limitsservice.config.LimitConfig;
 import org.munozy.microservices.demo.limitsservice.config.LimitsServiceConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,19 @@ public class LimitsConfigController {
         return LimitConfig.builder()
                 .maximum(limitsServiceConfig.getMaximum())
                 .minimum(limitsServiceConfig.getMinimum())
+                .build();
+    }
+
+    @GetMapping("/fault-tolerance-example")
+    @HystrixCommand(fallbackMethod="fallbackRetrieveConfiguration")
+    public LimitConfig retrieveConfiguration() {
+        throw new RuntimeException("Not available");
+    }
+
+    public LimitConfig fallbackRetrieveConfiguration() {
+        return LimitConfig.builder()
+                .maximum(2)
+                .minimum(1)
                 .build();
     }
 }
